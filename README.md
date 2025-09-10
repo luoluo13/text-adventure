@@ -1,4 +1,4 @@
-# 文字战斗者 (Text Fighter)
+# 自由式文字冒险RPG (text-adventure)
 
 一款基于纯文本交互的回合制角色扮演游戏(RPG)，所有游戏内容通过JSON配置文件进行配置和读取。
 
@@ -13,7 +13,7 @@
 ## 安装和运行
 
 1. 确保已安装Python 3.6或更高版本
-2. 安装Flask框架：
+2. 安装所需依赖：
    ```bash
    pip install flask
    ```
@@ -44,7 +44,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Text Fighter Project
+Copyright (c) 2025 Text Adventure Project
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

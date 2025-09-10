@@ -34,7 +34,7 @@ class Game:
         """
         self.clear_screen()
         print("=" * 50)
-        print("           文字战斗者 (Text Fighter)")
+        print("       自由式文字冒险RPG (text-adventure)")
         print("=" * 50)
         print("1. 开始游戏")
         print("2. 选择难度")
@@ -457,5 +457,5 @@ class Game:
         退出游戏
         """
         self.clear_screen()
-        print("感谢游玩文字战斗者!")
+        print("感谢游玩自由式文字冒险RPG!")
         sys.exit(0)

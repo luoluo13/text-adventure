@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-文字战斗者 (Text Fighter)
+自由式文字冒险RPG (text-adventure)
 一个基于文本的回合制角色扮演游戏
 """
 

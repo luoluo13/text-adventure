@@ -60,7 +60,7 @@ function handleMenuAction(action) {
             break;
         case 'quit-game':
             if (confirm('确定要退出游戏吗？')) {
-                alert('感谢游玩文字战斗者!');
+                alert('感谢游玩自由式文字冒险RPG!');
                 // 这里可以添加实际的退出逻辑
             }
             break;

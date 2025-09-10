@@ -11,7 +11,7 @@ from src.character import Player, Enemy
 from src.battle import Battle
 
 app = Flask(__name__)
-app.secret_key = 'text_fighter_secret_key'
+app.secret_key = 'text_adventure_secret_key'
 
 # 初始化配置管理器
 config_manager = ConfigManager("config")
