@@ -1,0 +1,132 @@
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #000;
+    color: #0f0;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid #0f0;
+    padding: 20px;
+    box-shadow: 0 0 10px #0f0;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #0f0;
+}
+
+.screen {
+    border: 1px solid #0f0;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #001a00;
+}
+
+.menu {
+    list-style-type: none;
+    padding: 0;
+}
+
+.menu li {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #0f0;
+    cursor: pointer;
+}
+
+.menu li:hover {
+    background-color: #003300;
+}
+
+.character-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.stat-bar {
+    height: 20px;
+    background-color: #333;
+    border: 1px solid #0f0;
+    margin: 5px 0;
+    position: relative;
+}
+
+.stat-fill {
+    height: 100%;
+    background-color: #0f0;
+}
+
+.battle-log {
+    height: 150px;
+    overflow-y: auto;
+    border: 1px solid #0f0;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #001100;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.btn {
+    background-color: #003300;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+}
+
+.btn:hover {
+    background-color: #006600;
+}
+
+.text-content {
+    white-space: pre-wrap;
+    line-height: 1.8;
+}
+
+.class-option {
+    border: 1px solid #0f0;
+    padding: 15px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.class-option:hover {
+    background-color: #003300;
+}
+
+.quest-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.quest-item {
+    border-bottom: 1px solid #0f0;
+    padding: 10px 0;
+}
+
+.npc-dialogue {
+    border: 1px solid #0f0;
+    padding: 15px;
+    margin: 15px 0;
+    background-color: #001100;
+}
+
+input[type="text"] {
+    background-color: #001a00;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 5px;
+    font-family: 'Courier New', monospace;
+}

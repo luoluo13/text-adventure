@@ -1,0 +1,74 @@
+{
+  "warrior": {
+    "name": "战士",
+    "description": "近战专家，拥有高生命值和防御力",
+    "base_stats": {
+      "hp": 100,
+      "mp": 30,
+      "atk": 15,
+      "matk": 5,
+      "def": 10,
+      "mdef": 5,
+      "agi": 7
+    },
+    "growth_rate": {
+      "hp": 15,
+      "mp": 3,
+      "atk": 3,
+      "matk": 1,
+      "def": 2,
+      "mdef": 1,
+      "agi": 1
+    },
+    "skills": ["slash", "shield_bash", "berserker_rage"],
+    "starting_items": ["iron_sword", "wooden_shield"]
+  },
+  "mage": {
+    "name": "法师",
+    "description": "魔法专家，掌握强大的元素法术",
+    "base_stats": {
+      "hp": 60,
+      "mp": 80,
+      "atk": 5,
+      "matk": 20,
+      "def": 3,
+      "mdef": 15,
+      "agi": 8
+    },
+    "growth_rate": {
+      "hp": 5,
+      "mp": 15,
+      "atk": 1,
+      "matk": 4,
+      "def": 1,
+      "mdef": 3,
+      "agi": 2
+    },
+    "skills": ["fireball", "ice_spike", "lightning_bolt"],
+    "starting_items": ["wooden_staff", "magic_robe"]
+  },
+  "archer": {
+    "name": "游侠",
+    "description": "远程攻击专家，高敏捷和暴击率",
+    "base_stats": {
+      "hp": 70,
+      "mp": 50,
+      "atk": 12,
+      "matk": 8,
+      "def": 5,
+      "mdef": 8,
+      "agi": 15
+    },
+    "growth_rate": {
+      "hp": 8,
+      "mp": 8,
+      "atk": 2,
+      "matk": 2,
+      "def": 1,
+      "mdef": 1,
+      "agi": 3
+    },
+    "skills": ["precise_shot", "multishot", "eagle_eye"],
+    "starting_items": ["short_bow", "leather_armor"]
+  }
+}

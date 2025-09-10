@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字战斗者 - Text Fighter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>文字战斗者 (Text Fighter)</h1>
+        
+        <!-- 主菜单界面 -->
+        <div id="menu-screen" class="screen">
+            <h3>主菜单界面</h3>
+            <ul class="menu" id="main-menu">
+                <li data-action="start-game">> 开始游戏</li>
+                <li data-action="select-difficulty">> 选择难度</li>
+                <li data-action="character-status">> 角色状态</li>
+                <li data-action="quit-game">> 退出游戏</li>
+            </ul>
+        </div>
+        
+        <!-- 角色创建界面 -->
+        <div id="character-creation-screen" class="screen" style="display: none;">
+            <h3>角色创建界面</h3>
+            <div class="text-content">
+                请输入角色名称: <input type="text" id="character-name" value="勇者">
+                <button id="confirm-name" class="btn">确认</button>
+            </div>
+            
+            <h4>请选择职业:</h4>
+            <div id="class-options">
+                <!-- 职业选项将通过JavaScript动态加载 -->
+            </div>
+        </div>
+        
+        <!-- 游戏世界界面 -->
+        <div id="world-screen" class="screen" style="display: none;">
+            <h3>游戏世界界面</h3>
+            <div class="text-content">
+                当前位置: 村庄
+                <br>
+                场景描述: 你站在一个宁静的村庄中央，周围是简朴的木屋和友好的村民。远处可以看到被黑暗笼罩的森林。
+            </div>
+            
+            <h4>可执行操作:</h4>
+            <ul class="menu">
+                <li data-action="enter-forest">> 移动到黑暗森林</li>
+                <li data-action="talk-to-elder">> 与村长交谈</li>
+                <li data-action="view-status">> 查看角色状态</li>
+                <li data-action="view-inventory">> 查看物品背包</li>
+                <li data-action="save-game">> 保存游戏</li>
+            </ul>
+        </div>
+        
+        <!-- 战斗界面 -->
+        <div id="battle-screen" class="screen" style="display: none;">
+            <h3>战斗界面</h3>
+            <div class="character-stats">
+                <div id="player-stats">
+                    <h4>角色: <span id="player-name">勇者</span></h4>
+                    <div>职业: <span id="player-class">未知</span></div>
+                    <div>HP: <div class="stat-bar"><div id="player-hp-bar" class="stat-fill" style="width: 100%;"></div></div> 
+                        <span id="player-hp">100</span>/<span id="player-max-hp">100</span>
+                    </div>
+                    <div>MP: <div class="stat-bar"><div id="player-mp-bar" class="stat-fill" style="width: 100%;"></div></div> 
+                        <span id="player-mp">50</span>/<span id="player-max-mp">50</span>
+                    </div>
+                </div>
+                <div id="enemy-stats">
+                    <h4>敌人: <span id="enemy-name">未知</span></h4>
+                    <div>等级: <span id="enemy-level">1</span></div>
+                    <div>HP: <div class="stat-bar"><div id="enemy-hp-bar" class="stat-fill" style="width: 100%;"></div></div> 
+                        <span id="enemy-hp">30</span>/<span id="enemy-max-hp">30</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="battle-log" class="battle-log">
+                > 战斗即将开始...
+            </div>
+            
+            <div class="button-group">
+                <button class="btn" data-action="attack">攻击</button>
+                <button class="btn" data-action="skill">技能</button>
+                <button class="btn" data-action="item">道具</button>
+                <button class="btn" data-action="defend">防御</button>
+                <button class="btn" data-action="escape">逃跑</button>
+            </div>
+        </div>
+        
+        <!-- 技能选择界面 -->
+        <div id="skill-screen" class="screen" style="display: none;">
+            <h3>技能选择界面</h3>
+            <ul class="menu" id="skill-list">
+                <!-- 技能列表将通过JavaScript动态加载 -->
+            </ul>
+        </div>
+        
+        <!-- 角色状态界面 -->
+        <div id="character-status-screen" class="screen" style="display: none;">
+            <h3>角色状态界面</h3>
+            <div class="character-stats">
+                <div>
+                    <h4 id="status-character-name">勇者 (Lv. 1)</h4>
+                    <div>职业: <span id="status-character-class">未知</span></div>
+                    <div>经验值: <span id="character-exp">0</span>/<span id="character-max-exp">100</span></div>
+                    <div>HP: <span id="status-hp">100</span>/<span id="status-max-hp">100</span></div>
+                    <div>MP: <span id="status-mp">50</span>/<span id="status-max-mp">50</span></div>
+                </div>
+                <div>
+                    <h4>属性</h4>
+                    <div>攻击力: <span id="character-atk">10</span></div>
+                    <div>魔法攻击力: <span id="character-matk">10</span></div>
+                    <div>防御力: <span id="character-defense">5</span></div>
+                    <div>魔法防御力: <span id="character-mdef">5</span></div>
+                    <div>敏捷: <span id="character-agi">5</span></div>
+                    <div>金币: <span id="character-gold">0</span></div>
+                </div>
+            </div>
+            
+            <h4>装备</h4>
+            <ul class="menu">
+                <li>> 武器: <span id="weapon">无</span></li>
+                <li>> 防具: <span id="armor">无</span></li>
+            </ul>
+            
+            <div class="button-group">
+                <button class="btn" id="back-to-menu">返回主菜单</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+{
+  "health_potion": {
+    "name": "生命药水",
+    "type": "consumable",
+    "effect": "restore_hp",
+    "value": 50,
+    "description": "恢复50点生命值"
+  },
+  "magic_potion": {
+    "name": "魔法药水",
+    "type": "consumable",
+    "effect": "restore_mp",
+    "value": 30,
+    "description": "恢复30点魔法值"
+  },
+  "iron_sword": {
+    "name": "铁剑",
+    "type": "weapon",
+    "stat_bonus": {
+      "atk": 8
+    },
+    "description": "一把锋利的铁剑"
+  },
+  "wooden_staff": {
+    "name": "木杖",
+    "type": "weapon",
+    "stat_bonus": {
+      "matk": 6
+    },
+    "description": "一根普通的木杖"
+  },
+  "short_bow": {
+    "name": "短弓",
+    "type": "weapon",
+    "stat_bonus": {
+      "atk": 6
+    },
+    "description": "一把轻便的短弓"
+  },
+  "wooden_shield": {
+    "name": "木盾",
+    "type": "armor",
+    "stat_bonus": {
+      "def": 5
+    },
+    "description": "一面简单的木盾"
+  },
+  "leather_armor": {
+    "name": "皮甲",
+    "type": "armor",
+    "stat_bonus": {
+      "def": 4,
+      "agi": -1
+    },
+    "description": "一套轻便的皮甲"
+  },
+  "magic_robe": {
+    "name": "魔法长袍",
+    "type": "armor",
+    "stat_bonus": {
+      "mdef": 6,
+      "matk": 2
+    },
+    "description": "增强魔法能力的长袍"
+  },
+  "magic_scroll": {
+    "name": "魔法卷轴",
+    "type": "consumable",
+    "effect": "permanent_bonus",
+    "stat_bonus": {
+      "matk": 2
+    },
+    "description": "永久提升2点魔法攻击力"
+  },
+  "legendary_weapon": {
+    "name": "传说武器",
+    "type": "weapon",
+    "stat_bonus": {
+      "atk": 20,
+      "matk": 15
+    },
+    "description": "拥有强大魔力的传说武器"
+  }
+}
