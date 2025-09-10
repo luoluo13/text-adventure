@@ -3,6 +3,7 @@ import sys
 from .config_manager import ConfigManager
 from .character import Player, Enemy
 from .battle import Battle
+from .quest import Quest
 
 class Game:
     """
@@ -21,6 +22,8 @@ class Game:
         self.current_chapter = 1
         self.difficulty = "normal"
         self.game_state = "menu"  # menu, playing, battle, game_over
+        self.quests = {}  # 存储激活的任务
+        self.completed_quests = set()  # 存储已完成的任务ID
         
     def start(self):
         """
@@ -90,6 +93,9 @@ class Game:
         
         # 显示角色初始属性
         self.show_character_creation_result(class_data)
+        
+        # 初始化任务系统
+        self.init_quests()
         
         # 开始游戏
         self.game_state = "playing"
@@ -168,6 +174,123 @@ class Game:
         input()
         self.show_menu()
         
+    def init_quests(self):
+        """
+        初始化任务系统
+        """
+        self.quests = {}
+        self.completed_quests = set()
+        
+    def accept_quest(self, quest_id):
+        """
+        接受任务
+        
+        Args:
+            quest_id (str): 任务ID
+        """
+        # 获取当前章节
+        chapter = self.config_manager.get_chapter(self.current_chapter)
+        if not chapter:
+            return False
+            
+        # 查找任务数据
+        for quest_data in chapter.get("quests", []):
+            if quest_data.get("id") == quest_id:
+                # 创建任务实例
+                quest = Quest(quest_data)
+                self.quests[quest_id] = quest
+                return True
+                
+        return False
+        
+    def update_quest_progress(self, enemy_name):
+        """
+        更新任务进度
+        
+        Args:
+            enemy_name (str): 被击败的敌人名称
+        """
+        completed_quests = []
+        for quest_id, quest in self.quests.items():
+            if not quest.is_completed():
+                if quest.update_progress(enemy_name):
+                    completed_quests.append(quest_id)
+                    
+        # 处理已完成的任务
+        for quest_id in completed_quests:
+            self.complete_quest(quest_id)
+            
+    def complete_quest(self, quest_id):
+        """
+        完成任务
+        
+        Args:
+            quest_id (str): 任务ID
+        """
+        if quest_id not in self.quests:
+            return
+            
+        quest = self.quests[quest_id]
+        reward = quest.get_reward()
+        
+        # 发放奖励
+        exp_reward = reward.get("exp", 0)
+        gold_reward = reward.get("gold", 0)
+        items_reward = reward.get("items", [])
+        title_reward = reward.get("title", "")
+        
+        if exp_reward > 0:
+            self.player.add_exp(exp_reward)
+            print(f"获得了 {exp_reward} 点经验值!")
+            
+        if gold_reward > 0:
+            self.player.add_gold(gold_reward)
+            print(f"获得了 {gold_reward} 枚金币!")
+            
+        for item_name in items_reward:
+            self.player.items.append(item_name)
+            item_data = self.config_manager.get_item(item_name)
+            item_display_name = item_data.get("name", item_name) if item_data else item_name
+            print(f"获得了 {item_display_name}!")
+            
+        if title_reward:
+            print(f"获得了称号: {title_reward}!")
+            
+        # 标记任务为已完成
+        self.completed_quests.add(quest_id)
+        print(f"任务 '{quest.name}' 已完成!")
+        
+    def show_quests(self):
+        """
+        显示任务列表
+        """
+        self.clear_screen()
+        print("任务列表")
+        print("=" * 30)
+        
+        if not self.quests:
+            print("当前没有进行中的任务")
+        else:
+            print("进行中的任务:")
+            for quest_id, quest in self.quests.items():
+                if not quest.is_completed():
+                    print(f"- {quest.name}")
+                    print(f"  {quest.description}")
+                    print(f"  进度: {quest.get_progress_text()}")
+                    print()
+                    
+        if self.completed_quests:
+            print("已完成的任务:")
+            for quest_id in self.completed_quests:
+                if quest_id in self.quests:
+                    quest = self.quests[quest_id]
+                    print(f"- {quest.name}")
+            print()
+            
+        print("=" * 30)
+        print("\n按回车键继续...")
+        input()
+        
     def start_story(self):
         """
         开始游戏剧情
@@ -222,10 +345,11 @@ class Game:
             print("2. 与村长交谈")
             print("3. 查看角色状态")
             print("4. 查看物品背包")
-            print("5. 保存游戏")
-            print("6. 返回主菜单")
+            print("5. 查看任务列表")
+            print("6. 保存游戏")
+            print("7. 返回主菜单")
             
-            choice = self.get_user_choice(1, 6)
+            choice = self.get_user_choice(1, 7)
             
             if choice == 1:
                 # 进入战斗示例
@@ -237,8 +361,10 @@ class Game:
             elif choice == 4:
                 self.show_inventory()
             elif choice == 5:
-                self.save_game()
+                self.show_quests()
             elif choice == 6:
+                self.save_game()
+            elif choice == 7:
                 self.show_menu()
                 break
                 
@@ -263,19 +389,48 @@ class Game:
         self.clear_screen()
         print("村长:")
         print(village_elder.get("dialogue", ""))
-        print("\n可选回应:")
-        print("1. 我会保护村庄的!")
-        print("2. 哥布林在哪里?")
-        print("3. 我需要更多情报")
-        print("4. 结束对话")
         
-        choice = self.get_user_choice(1, 4)
-        if choice == 1:
-            print("\n村长: 很好，年轻人。哥布林就在村庄周围的森林里，去消灭它们吧!")
-        elif choice == 2:
-            print("\n村长: 它们在村庄北边的森林里，小心点!")
-        elif choice == 3:
-            print("\n村长: 消灭5只哥布林就能保护村庄了。")
+        # 显示可接任务
+        quests_available = village_elder.get("quests_available", [])
+        if quests_available:
+            print("\n可接任务:")
+            available_quests = []
+            for quest_id in quests_available:
+                # 检查任务是否已经完成
+                if quest_id not in self.completed_quests:
+                    # 检查任务是否已经接受
+                    if quest_id not in self.quests:
+                        available_quests.append(quest_id)
+                        
+            if available_quests:
+                for i, quest_id in enumerate(available_quests, 1):
+                    # 获取任务数据
+                    quest_data = None
+                    for q in chapter.get("quests", []):
+                        if q.get("id") == quest_id:
+                            quest_data = q
+                            break
+                            
+                    if quest_data:
+                        print(f"{i}. {quest_data.get('name', quest_id)}")
+                        print(f"   {quest_data.get('description', '')}")
+                        
+                print(f"{len(available_quests) + 1}. 返回")
+                
+                quest_choice = self.get_user_choice(1, len(available_quests) + 1)
+                if quest_choice <= len(available_quests):
+                    selected_quest_id = available_quests[quest_choice - 1]
+                    if self.accept_quest(selected_quest_id):
+                        quest_name = None
+                        for q in chapter.get("quests", []):
+                            if q.get("id") == selected_quest_id:
+                                quest_name = q.get("name", selected_quest_id)
+                                break
+                        print(f"\n已接受任务: {quest_name}")
+            else:
+                print("当前没有可接任务")
+        else:
+            print("\n当前没有可接任务")
             
         print("\n按回车键继续...")
         input()
@@ -391,6 +546,11 @@ class Game:
                 
             # 检查战斗是否结束
             if not battle.is_active or not battle.player.is_alive() or not battle.enemy.is_alive():
+                # 检查是否击败了敌人
+                if not battle.enemy.is_alive():
+                    # 更新任务进度
+                    self.update_quest_progress(battle.enemy.name)
+                    
                 # 显示最终结果
                 self.clear_screen()
                 print("战斗结束!")

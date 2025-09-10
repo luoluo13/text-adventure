@@ -9,6 +9,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from src.config_manager import ConfigManager
 from src.character import Player, Enemy
 from src.battle import Battle
+from src.quest import Quest
 
 app = Flask(__name__)
 app.secret_key = 'text_adventure_secret_key'
@@ -24,6 +25,8 @@ class GameManager:
         self.difficulty = "normal"
         self.game_state = "menu"
         self.battle = None
+        self.quests = {}  # 存储激活的任务
+        self.completed_quests = set()  # 存储已完成的任务ID
 
 game_manager = GameManager()
 
@@ -112,6 +115,10 @@ def get_story_intro():
 
 @app.route('/api/start_battle', methods=['POST'])
 def start_battle():
+    # 检查玩家是否存在
+    if not game_manager.player:
+        return jsonify({'status': 'error', 'message': '请先创建角色'})
+    
     # 创建一个哥布林敌人作为示例
     goblin_config = config_manager.get_enemy("goblin")
     if not goblin_config:
@@ -154,6 +161,9 @@ def battle_action():
     if not game_manager.battle:
         return jsonify({'status': 'error', 'message': '没有进行中的战斗'})
     
+    if not game_manager.player:
+        return jsonify({'status': 'error', 'message': '请先创建角色'})
+    
     data = request.get_json()
     action = data.get('action')
     skill_name = data.get('skill_name')
@@ -165,6 +175,12 @@ def battle_action():
     battle_ended = not game_manager.battle.is_active or \
                    not game_manager.battle.player.is_alive() or \
                    not game_manager.battle.enemy.is_alive()
+    
+    # 如果敌人被击败，更新任务进度
+    enemy_name = None
+    if not game_manager.battle.enemy.is_alive():
+        enemy_name = game_manager.battle.enemy.name
+        update_quest_progress(enemy_name)
     
     # 返回战斗状态
     battle_state = {
@@ -192,6 +208,110 @@ def battle_action():
     return jsonify({
         'status': 'success',
         'battle_state': battle_state
+    })
+
+def update_quest_progress(enemy_name):
+    """
+    更新任务进度
+    
+    Args:
+        enemy_name (str): 被击败的敌人名称
+    """
+    completed_quests = []
+    for quest_id, quest in game_manager.quests.items():
+        if not quest.is_completed():
+            if quest.update_progress(enemy_name):
+                completed_quests.append(quest_id)
+                
+    # 处理已完成的任务
+    for quest_id in completed_quests:
+        complete_quest(quest_id)
+
+def complete_quest(quest_id):
+    """
+    完成任务
+    
+    Args:
+        quest_id (str): 任务ID
+    """
+    if quest_id not in game_manager.quests:
+        return
+        
+    quest = game_manager.quests[quest_id]
+    reward = quest.get_reward()
+    
+    # 发放奖励
+    exp_reward = reward.get("exp", 0)
+    gold_reward = reward.get("gold", 0)
+    items_reward = reward.get("items", [])
+    
+    if exp_reward > 0:
+        game_manager.player.add_exp(exp_reward)
+        
+    if gold_reward > 0:
+        game_manager.player.add_gold(gold_reward)
+        
+    for item_name in items_reward:
+        game_manager.player.items.append(item_name)
+        
+    # 标记任务为已完成
+    game_manager.completed_quests.add(quest_id)
+
+@app.route('/api/accept_quest', methods=['POST'])
+def accept_quest():
+    """
+    接受任务
+    """
+    data = request.get_json()
+    quest_id = data.get('quest_id')
+    
+    # 获取当前章节
+    chapter = config_manager.get_chapter(game_manager.current_chapter)
+    if not chapter:
+        return jsonify({'status': 'error', 'message': '章节数据错误'})
+        
+    # 查找任务数据
+    for quest_data in chapter.get("quests", []):
+        if quest_data.get("id") == quest_id:
+            # 创建任务实例
+            quest = Quest(quest_data)
+            game_manager.quests[quest_id] = quest
+            return jsonify({'status': 'success', 'message': f'已接受任务: {quest.name}'})
+            
+    return jsonify({'status': 'error', 'message': '任务未找到'})
+
+@app.route('/api/get_quests', methods=['GET'])
+def get_quests():
+    """
+    获取任务列表
+    """
+    active_quests = []
+    completed_quests = []
+    
+    # 添加进行中的任务
+    for quest_id, quest in game_manager.quests.items():
+        if not quest.is_completed():
+            active_quests.append({
+                'id': quest.id,
+                'name': quest.name,
+                'description': quest.description,
+                'progress': quest.get_progress_text(),
+                'required_count': quest.required_count
+            })
+    
+    # 添加已完成的任务
+    for quest_id in game_manager.completed_quests:
+        if quest_id in game_manager.quests:
+            quest = game_manager.quests[quest_id]
+            completed_quests.append({
+                'id': quest.id,
+                'name': quest.name,
+                'description': quest.description
+            })
+    
+    return jsonify({
+        'active_quests': active_quests,
+        'completed_quests': completed_quests
     })
 
 if __name__ == '__main__':

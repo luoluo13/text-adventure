@@ -50,6 +50,7 @@
                 <li data-action="talk-to-elder">> 与村长交谈</li>
                 <li data-action="view-status">> 查看角色状态</li>
                 <li data-action="view-inventory">> 查看物品背包</li>
+                <li data-action="view-quests">> 查看任务列表</li>
                 <li data-action="save-game">> 保存游戏</li>
             </ul>
         </div>
@@ -128,6 +129,25 @@
             
             <div class="button-group">
                 <button class="btn" id="back-to-menu">返回主菜单</button>
+            </div>
+        </div>
+        
+        <!-- 任务界面 -->
+        <div id="quests-screen" class="screen" style="display: none;">
+            <h3>任务列表</h3>
+            
+            <h4>进行中的任务:</h4>
+            <div id="active-quests-list">
+                <!-- 进行中的任务将通过JavaScript动态加载 -->
+            </div>
+            
+            <h4>已完成的任务:</h4>
+            <div id="completed-quests-list">
+                <!-- 已完成的任务将通过JavaScript动态加载 -->
+            </div>
+            
+            <div class="button-group">
+                <button class="btn" id="back-to-world">返回游戏世界</button>
             </div>
         </div>
     </div>

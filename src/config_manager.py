@@ -162,3 +162,21 @@ class ConfigManager:
             if chapter.get("id") == chapter_id:
                 return chapter
         return {}
+        
+    def get_quest(self, chapter_id, quest_id):
+        """
+        获取特定章节中的任务配置
+        
+        Args:
+            chapter_id (int): 章节ID
+            quest_id (str): 任务ID
+            
+        Returns:
+            dict: 任务配置数据
+        """
+        chapter = self.get_chapter(chapter_id)
+        if chapter:
+            for quest in chapter.get("quests", []):
+                if quest.get("id") == quest_id:
+                    return quest
+        return {}

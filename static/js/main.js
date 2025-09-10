@@ -2,7 +2,9 @@
 let gameState = {
     player: null,
     currentScreen: 'menu',
-    battle: null
+    battle: null,
+    quests: {},  // 存储激活的任务
+    completedQuests: []  // 存储已完成的任务
 };
 
 // 页面加载完成后初始化
@@ -38,6 +40,14 @@ function initMainMenu() {
     if (backToMenuBtn) {
         backToMenuBtn.addEventListener('click', function() {
             showScreen('menu');
+        });
+    }
+    
+    // 查看任务列表按钮
+    const viewQuestsBtn = document.getElementById('view-quests');
+    if (viewQuestsBtn) {
+        viewQuestsBtn.addEventListener('click', function() {
+            showQuests();
         });
     }
 }
@@ -76,6 +86,7 @@ function showScreen(screenName) {
     document.getElementById('battle-screen').style.display = 'none';
     document.getElementById('skill-screen').style.display = 'none';
     document.getElementById('character-status-screen').style.display = 'none';
+    document.getElementById('quests-screen').style.display = 'none';
     
     // 显示指定界面
     switch(screenName) {
@@ -96,6 +107,9 @@ function showScreen(screenName) {
             break;
         case 'character-status':
             document.getElementById('character-status-screen').style.display = 'block';
+            break;
+        case 'quests':
+            document.getElementById('quests-screen').style.display = 'block';
             break;
     }
     
@@ -223,6 +237,63 @@ function showCharacterStatus() {
     showScreen('character-status');
 }
 
+// 显示任务列表
+function showQuests() {
+    fetch('/api/get_quests')
+        .then(response => response.json())
+        .then(data => {
+            // 更新任务数据
+            gameState.activeQuests = data.active_quests;
+            gameState.completedQuests = data.completed_quests;
+            
+            // 更新界面
+            const activeQuestsList = document.getElementById('active-quests-list');
+            const completedQuestsList = document.getElementById('completed-quests-list');
+            
+            // 清空现有内容
+            activeQuestsList.innerHTML = '';
+            completedQuestsList.innerHTML = '';
+            
+            // 显示进行中的任务
+            if (data.active_quests.length > 0) {
+                data.active_quests.forEach(quest => {
+                    const questItem = document.createElement('div');
+                    questItem.className = 'quest-item';
+                    questItem.innerHTML = `
+                        <strong>${quest.name}</strong>
+                        <p>${quest.description}</p>
+                        <p>进度: ${quest.progress}/${quest.required_count}</p>
+                    `;
+                    activeQuestsList.appendChild(questItem);
+                });
+            } else {
+                activeQuestsList.innerHTML = '<p>当前没有进行中的任务</p>';
+            }
+            
+            // 显示已完成的任务
+            if (data.completed_quests.length > 0) {
+                data.completed_quests.forEach(quest => {
+                    const questItem = document.createElement('div');
+                    questItem.className = 'quest-item';
+                    questItem.innerHTML = `
+                        <strong>${quest.name}</strong>
+                        <p>${quest.description}</p>
+                        <p style="color: #0f0;">[已完成]</p>
+                    `;
+                    completedQuestsList.appendChild(questItem);
+                });
+            } else {
+                completedQuestsList.innerHTML = '<p>当前没有已完成的任务</p>';
+            }
+            
+            showScreen('quests');
+        })
+        .catch(error => {
+            console.error('加载任务列表失败:', error);
+            alert('加载任务列表失败');
+        });
+}
+
 // 世界界面操作
 document.addEventListener('click', function(e) {
     if (gameState.currentScreen !== 'world') return;
@@ -243,6 +314,9 @@ document.addEventListener('click', function(e) {
         case 'view-inventory':
             alert('物品背包功能尚未实现');
             break;
+        case 'view-quests':
+            showQuests();
+            break;
         case 'save-game':
             alert('保存游戏功能尚未实现');
             break;
@@ -257,7 +331,12 @@ function startBattle() {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.status === 'success') {
             gameState.battle = data.battle_state;
@@ -269,7 +348,7 @@ function startBattle() {
     })
     .catch(error => {
         console.error('开始战斗失败:', error);
-        alert('开始战斗失败');
+        alert('开始战斗失败: ' + error.message);
     });
 }
 
@@ -353,15 +432,20 @@ function performBattleAction(action) {
             action: action
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.status === 'success') {
             gameState.battle = data.battle_state;
             updateBattleUI();
             
             // 检查战斗是否结束
-            if (gameState.battle.battle_ended) {
-                if (gameState.battle.player_won) {
+            if (data.battle_state.battle_ended) {
+                if (data.battle_state.player_won) {
                     alert('你赢得了战斗!');
                 } else {
                     alert('你被击败了!');
@@ -374,6 +458,6 @@ function performBattleAction(action) {
     })
     .catch(error => {
         console.error('执行行动失败:', error);
-        alert('执行行动失败');
+        alert('执行行动失败: ' + error.message);
     });
 }
