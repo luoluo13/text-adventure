@@ -1,0 +1,109 @@
+{
+  "intro": {
+    "title": "黑暗降临",
+    "text": "你生活在一个和平的村庄里，直到有一天，黑暗势力从北方山脉涌来，吞噬了周围的土地。国王的军队节节败退，村庄也面临威胁。作为一名年轻的冒险者，你决定踏上征程，寻找击败黑暗势力的方法。"
+  },
+  "chapters": [
+    {
+      "id": 1,
+      "title": "村庄的危机",
+      "description": "你的家乡正受到哥布林的袭击，需要保护村民并击退入侵者。",
+      "quests": [
+        {
+          "id": "q1",
+          "name": "保卫村庄",
+          "description": "击败5只哥布林",
+          "objective": {
+            "type": "defeat_enemies",
+            "enemy": "goblin",
+            "count": 5
+          },
+          "reward": {
+            "exp": 50,
+            "gold": 20,
+            "items": ["health_potion"]
+          }
+        }
+      ],
+      "npcs": [
+        {
+          "id": "village_elder",
+          "name": "村长",
+          "dialogue": "年轻人，村庄需要你的帮助！哥布林正在袭击我们的家园，请你保护村民！",
+          "quests_available": ["q1"]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "森林的秘密",
+      "description": "前往黑暗森林调查哥布林的来源，发现更大的阴谋。",
+      "quests": [
+        {
+          "id": "q2",
+          "name": "调查森林",
+          "description": "深入黑暗森林，击败哥布林萨满",
+          "objective": {
+            "type": "defeat_enemies",
+            "enemy": "goblin_shaman",
+            "count": 1
+          },
+          "reward": {
+            "exp": 100,
+            "gold": 50,
+            "items": ["magic_scroll"]
+          }
+        }
+      ],
+      "npcs": [
+        {
+          "id": "forest_guard",
+          "name": "森林守卫",
+          "dialogue": "这片森林被邪恶力量污染了，哥布林萨满正在召唤更多的怪物。你必须阻止他！",
+          "quests_available": ["q2"]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "黑暗城堡",
+      "description": "最终挑战，前往黑暗领主的城堡，拯救世界。",
+      "quests": [
+        {
+          "id": "q3",
+          "name": "击败黑暗领主",
+          "description": "挑战最终BOSS黑暗领主",
+          "objective": {
+            "type": "defeat_enemies",
+            "enemy": "dark_lord",
+            "count": 1
+          },
+          "reward": {
+            "exp": 1000,
+            "gold": 500,
+            "items": ["legendary_weapon"],
+            "title": "救世主"
+          }
+        }
+      ],
+      "npcs": [
+        {
+          "id": "wise_wizard",
+          "name": "智者法师",
+          "dialogue": "年轻人，黑暗领主就在前方的城堡中。这是最后的战斗，世界命运掌握在你手中！",
+          "quests_available": ["q3"]
+        }
+      ]
+    }
+  ],
+  "ending": {
+    "good_ending": {
+      "title": "光明重现",
+      "text": "你成功击败了黑暗领主，黑暗势力被驱散，世界重归和平。你的名字将被世代传颂，成为拯救世界的英雄。"
+    },
+    "bad_ending": {
+      "title": "黑暗统治",
+      "text": "你未能阻止黑暗领主，世界被黑暗吞噬。但这并不是结束，希望仍在，新的英雄将会崛起..."
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "village_shop": {
+    "name": "村庄商店",
+    "description": "村庄里的基础商店，提供冒险必需品",
+    "items": [
+      "health_potion",
+      "magic_potion",
+      "iron_sword",
+      "wooden_staff",
+      "short_bow",
+      "wooden_shield",
+      "leather_armor",
+      "magic_robe"
+    ]
+  },
+  "wizard_shop": {
+    "name": "法师商店",
+    "description": "专为法师提供高级魔法用品",
+    "items": [
+      "magic_potion",
+      "magic_scroll",
+      "wooden_staff",
+      "magic_robe"
+    ]
+  }
+}

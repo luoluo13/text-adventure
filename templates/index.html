@@ -10,8 +10,59 @@
     <div class="container">
         <h1>自由式文字冒险RPG (text-adventure)</h1>
         
+        <!-- 游戏选择界面 -->
+        <div id="game-selection-screen" class="screen">
+            <h3>请选择游戏</h3>
+            <div id="game-list">
+                <!-- 游戏列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+        
+        <!-- 游戏主界面 -->
+        <div id="game-main-screen" class="screen" style="display: none;">
+            <h3 id="game-title">游戏名称</h3>
+            <ul class="menu">
+                <li data-action="start-new-game">> 开始游戏</li>
+                <li data-action="load-game">> 选择存档</li>
+                <li data-action="game-settings">> 游戏设置</li>
+                <li data-action="back-to-games">> 返回上一页</li>
+            </ul>
+        </div>
+        
+        <!-- 新游戏界面 -->
+        <div id="new-game-screen" class="screen" style="display: none;">
+            <h3>开始新游戏</h3>
+            <div class="text-content">
+                存档名称: <input type="text" id="save-name" value="save1">
+                <br><br>
+                同步模式:
+                <select id="sync-mode">
+                    <option value="manual">手动同步</option>
+                    <option value="auto">自动同步</option>
+                </select>
+                <br><br>
+                角色名称: <input type="text" id="character-name" value="勇者">
+                <br><br>
+                <button id="confirm-new-game" class="btn">确认</button>
+                <button id="back-to-game-main" class="btn">返回</button>
+            </div>
+        </div>
+        
+        <!-- 存档选择界面 -->
+        <div id="save-selection-screen" class="screen" style="display: none;">
+            <h3>选择存档</h3>
+            <div id="save-list">
+                <!-- 存档列表将通过JavaScript动态加载 -->
+            </div>
+            <div id="no-saves-message" style="display: none;">
+                暂无存档，请开始新游戏
+            </div>
+            <br>
+            <button id="back-to-game-main-from-saves" class="btn">返回</button>
+        </div>
+        
         <!-- 主菜单界面 -->
-        <div id="menu-screen" class="screen">
+        <div id="menu-screen" class="screen" style="display: none;">
             <h3>主菜单界面</h3>
             <ul class="menu" id="main-menu">
                 <li data-action="start-game">> 开始游戏</li>
@@ -25,7 +76,7 @@
         <div id="character-creation-screen" class="screen" style="display: none;">
             <h3>角色创建界面</h3>
             <div class="text-content">
-                请输入角色名称: <input type="text" id="character-name" value="勇者">
+                请输入角色名称: <input type="text" id="character-name-create" value="勇者">
                 <button id="confirm-name" class="btn">确认</button>
             </div>
             
@@ -39,13 +90,13 @@
         <div id="world-screen" class="screen" style="display: none;">
             <h3>游戏世界界面</h3>
             <div class="text-content">
-                当前位置: 村庄
+                当前位置: <span id="current-location">村庄</span>
                 <br>
-                场景描述: 你站在一个宁静的村庄中央，周围是简朴的木屋和友好的村民。远处可以看到被黑暗笼罩的森林。
+                场景描述: <span id="scene-description">你站在一个宁静的村庄中央，周围是简朴的木屋和友好的村民。远处可以看到被黑暗笼罩的森林。</span>
             </div>
             
             <h4>可执行操作:</h4>
-            <ul class="menu">
+            <ul class="menu" id="world-actions">
                 <li data-action="enter-forest">> 移动到黑暗森林</li>
                 <li data-action="talk-to-elder">> 与村长交谈</li>
                 <li data-action="view-status">> 查看角色状态</li>
@@ -128,7 +179,10 @@
             </ul>
             
             <div class="button-group">
-                <button class="btn" id="back-to-menu">返回主菜单</button>
+                <button class="btn" id="back-to-game-main-from-status">返回游戏主界面</button>
+            </div>
+            <div class="button-group">
+                <button class="btn" id="back-to-world">返回上一页</button>
             </div>
         </div>
         
@@ -147,7 +201,7 @@
             </div>
             
             <div class="button-group">
-                <button class="btn" id="back-to-world">返回游戏世界</button>
+                <button class="btn" id="back-to-previous-from-quests">返回上一页</button>
             </div>
         </div>
     </div>

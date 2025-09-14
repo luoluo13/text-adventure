@@ -1,0 +1,36 @@
+{
+  "player": {
+    "name": "勇者",
+    "class_name": "战士",
+    "level": 1,
+    "exp": 0,
+    "exp_to_next_level": 100,
+    "hp": 94,
+    "max_hp": 100,
+    "mp": 30,
+    "max_mp": 30,
+    "atk": 15,
+    "matk": 5,
+    "defense": 10,
+    "mdef": 5,
+    "agi": 7,
+    "gold": 0,
+    "skills": [
+      "slash",
+      "shield_bash",
+      "berserker_rage"
+    ],
+    "items": [
+      "iron_sword",
+      "wooden_shield"
+    ],
+    "stat_points": 0,
+    "equipped_items": {}
+  },
+  "current_chapter": 1,
+  "difficulty": "normal",
+  "game_state": "playing",
+  "quests": {},
+  "completed_quests": [],
+  "sync_mode": "manual"
+}

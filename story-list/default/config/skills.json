@@ -1,0 +1,104 @@
+{
+  "slash": {
+    "name": "斩击",
+    "type": "physical",
+    "power": 10,
+    "mp_cost": 3,
+    "description": "基础物理攻击"
+  },
+  "shield_bash": {
+    "name": "盾击",
+    "type": "physical",
+    "power": 12,
+    "mp_cost": 5,
+    "description": "用盾牌攻击敌人，有一定几率造成眩晕"
+  },
+  "berserker_rage": {
+    "name": "狂战士之怒",
+    "type": "buff",
+    "power": 0,
+    "mp_cost": 10,
+    "description": "提升自身攻击力，但会降低防御力",
+    "effects": {
+      "atk": 1.5,
+      "def": 0.5
+    },
+    "duration": 3
+  },
+  "fireball": {
+    "name": "火球术",
+    "type": "magical",
+    "power": 18,
+    "mp_cost": 8,
+    "description": "发射火球攻击敌人"
+  },
+  "ice_spike": {
+    "name": "冰锥术",
+    "type": "magical",
+    "power": 15,
+    "mp_cost": 7,
+    "description": "召唤冰锥攻击敌人，有一定几率冻结目标"
+  },
+  "lightning_bolt": {
+    "name": "闪电链",
+    "type": "magical",
+    "power": 20,
+    "mp_cost": 12,
+    "description": "释放连锁闪电攻击多个敌人"
+  },
+  "precise_shot": {
+    "name": "精准射击",
+    "type": "physical",
+    "power": 16,
+    "mp_cost": 6,
+    "description": "高精度射击，必定暴击"
+  },
+  "multishot": {
+    "name": "多重射击",
+    "type": "physical",
+    "power": 8,
+    "mp_cost": 10,
+    "description": "同时攻击多个敌人",
+    "targets": 3
+  },
+  "eagle_eye": {
+    "name": "鹰眼",
+    "type": "buff",
+    "power": 0,
+    "mp_cost": 8,
+    "description": "提升命中率和暴击率",
+    "effects": {
+      "crit_rate": 1.5,
+      "accuracy": 1.3
+    },
+    "duration": 4
+  },
+  "heal": {
+    "name": "治疗术",
+    "type": "support",
+    "power": 25,
+    "mp_cost": 6,
+    "description": "恢复生命值"
+  },
+  "dark_pulse": {
+    "name": "黑暗脉冲",
+    "type": "magical",
+    "power": 25,
+    "mp_cost": 15,
+    "description": "释放黑暗能量攻击所有敌人"
+  },
+  "life_drain": {
+    "name": "生命吸取",
+    "type": "magical",
+    "power": 20,
+    "mp_cost": 10,
+    "description": "攻击敌人并恢复自身生命值"
+  },
+  "meteor_strike": {
+    "name": "陨石冲击",
+    "type": "magical",
+    "power": 35,
+    "mp_cost": 20,
+    "description": "召唤陨石攻击单个敌人"
+  }
+}

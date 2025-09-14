@@ -5,7 +5,7 @@ class Battle:
     """
     战斗系统类，处理玩家与敌人之间的战斗逻辑
     """
-    def __init__(self, player, enemy, config_manager):
+    def __init__(self, player, enemy, config_manager, difficulty="normal"):
         """
         初始化战斗系统
         
@@ -13,13 +13,32 @@ class Battle:
             player (Player): 玩家角色
             enemy (Enemy): 敌人角色
             config_manager (ConfigManager): 配置管理器
+            difficulty (str): 游戏难度
         """
         self.player = player
         self.enemy = enemy
         self.config_manager = config_manager
+        self.difficulty = difficulty
         self.battle_log = []
         self.is_active = True
+        self.player_buffs = {}  # 玩家增益效果
+        self.enemy_buffs = {}    # 敌人增益效果
         
+        # 根据难度调整敌人属性
+        self.apply_difficulty_modifiers()
+        
+    def apply_difficulty_modifiers(self):
+        """
+        根据难度调整敌人属性
+        """
+        difficulty_config = self.config_manager.get_difficulty(self.difficulty)
+        if difficulty_config:
+            multiplier = difficulty_config.get("enemy_strength_multiplier", 1.0)
+            self.enemy.hp = int(self.enemy.hp * multiplier)
+            self.enemy.max_hp = self.enemy.hp
+            self.enemy.atk = int(self.enemy.atk * multiplier)
+            self.enemy.defense = int(self.enemy.defense * multiplier)
+            
     def start_battle(self):
         """
         开始战斗
@@ -74,10 +93,18 @@ class Battle:
         """
         玩家普通攻击
         """
+        # 计算暴击
+        is_critical = random.randint(1, 100) <= 10  # 10%暴击率
+        
         # 计算伤害
         damage = max(1, self.player.atk - self.enemy.defense // 2)
         damage = random.randint(int(damage * 0.8), int(damage * 1.2))  # 添加随机性
         
+        # 暴击伤害翻倍
+        if is_critical:
+            damage *= 2
+            self.add_to_log("暴击!")
+            
         # 造成伤害
         actual_damage = self.enemy.take_damage(damage)
         self.add_to_log(f"你对{self.enemy.name}造成了{actual_damage}点伤害!")
@@ -107,15 +134,29 @@ class Battle:
         
         if skill_type == "physical":
             # 物理技能
+            is_critical = random.randint(1, 100) <= 15  # 15%暴击率
             damage = max(1, (self.player.atk + power) - self.enemy.defense // 2)
             damage = random.randint(int(damage * 0.8), int(damage * 1.2))
+            
+            # 暴击伤害翻倍
+            if is_critical:
+                damage *= 2
+                self.add_to_log("暴击!")
+                
             actual_damage = self.enemy.take_damage(damage)
             self.add_to_log(f"对{self.enemy.name}造成了{actual_damage}点伤害!")
             
         elif skill_type == "magical":
             # 魔法技能
+            is_critical = random.randint(1, 100) <= 15  # 15%暴击率
             damage = max(1, (self.player.matk + power) - self.enemy.mdef // 2)
             damage = random.randint(int(damage * 0.8), int(damage * 1.2))
+            
+            # 暴击伤害翻倍
+            if is_critical:
+                damage *= 2
+                self.add_to_log("暴击!")
+                
             actual_damage = self.enemy.take_damage(damage)
             self.add_to_log(f"对{self.enemy.name}造成了{actual_damage}点魔法伤害!")
             
@@ -135,8 +176,24 @@ class Battle:
         """
         玩家使用道具
         """
-        self.add_to_log("使用道具功能尚未实现!")
+        # 检查玩家是否有道具
+        if not self.player.items:
+            self.add_to_log("你没有任何道具!")
+            return
+            
+        # 这里应该有一个界面让用户选择道具
+        # 简单实现：使用第一个道具
+        item_name = self.player.items[0]
+        item = self.config_manager.get_item(item_name)
         
+        if self.player.use_item(item_name, self.config_manager):
+            # 从背包中移除已使用的道具
+            if item.get("type") == "consumable":
+                self.player.items.remove(item_name)
+            self.add_to_log(f"你使用了{item.get('name', item_name)}!")
+        else:
+            self.add_to_log(f"无法使用{item.get('name', item_name)}!")
+            
     def player_defend(self):
         """
         玩家防御
@@ -148,8 +205,18 @@ class Battle:
         """
         玩家逃跑
         """
-        # 简单的逃跑逻辑，70%概率成功
-        if random.randint(1, 100) <= 70:
+        # 逃跑成功率受难度影响
+        difficulty_config = self.config_manager.get_difficulty(self.difficulty)
+        escape_chance = 70  # 基础逃跑率
+        
+        if difficulty_config:
+            # 简单难度增加逃跑率，困难难度降低逃跑率
+            if self.difficulty == "easy":
+                escape_chance = 80
+            elif self.difficulty == "hard":
+                escape_chance = 50
+                
+        if random.randint(1, 100) <= escape_chance:
             self.add_to_log("你成功逃跑了!")
             self.is_active = False
         else:
@@ -173,10 +240,18 @@ class Battle:
         """
         敌人普通攻击
         """
+        # 计算暴击
+        is_critical = random.randint(1, 100) <= 5  # 敌人5%暴击率
+        
         # 计算伤害
         damage = max(1, self.enemy.atk - self.player.defense // 2)
         damage = random.randint(int(damage * 0.8), int(damage * 1.2))  # 添加随机性
         
+        # 暴击伤害翻倍
+        if is_critical:
+            damage *= 2
+            self.add_to_log(f"{self.enemy.name}的攻击暴击了!")
+            
         # 造成伤害
         actual_damage = self.player.take_damage(damage)
         self.add_to_log(f"{self.enemy.name}对你造成了{actual_damage}点伤害!")
@@ -201,15 +276,29 @@ class Battle:
         
         if skill_type == "physical":
             # 物理技能
+            is_critical = random.randint(1, 100) <= 10  # 10%暴击率
             damage = max(1, (self.enemy.atk + power) - self.player.defense // 2)
             damage = random.randint(int(damage * 0.8), int(damage * 1.2))
+            
+            # 暴击伤害翻倍
+            if is_critical:
+                damage *= 2
+                self.add_to_log(f"{self.enemy.name}的技能暴击了!")
+                
             actual_damage = self.player.take_damage(damage)
             self.add_to_log(f"对你造成了{actual_damage}点伤害!")
             
         elif skill_type == "magical":
             # 魔法技能
+            is_critical = random.randint(1, 100) <= 10  # 10%暴击率
             damage = max(1, (self.enemy.matk + power) - self.player.mdef // 2)
             damage = random.randint(int(damage * 0.8), int(damage * 1.2))
+            
+            # 暴击伤害翻倍
+            if is_critical:
+                damage *= 2
+                self.add_to_log(f"{self.enemy.name}的技能暴击了!")
+                
             actual_damage = self.player.take_damage(damage)
             self.add_to_log(f"对你造成了{actual_damage}点魔法伤害!")
             
@@ -243,3 +332,9 @@ class Battle:
             self.player.add_exp(self.enemy.exp_reward)
             self.player.add_gold(self.enemy.gold_reward)
             self.add_to_log(f"获得了{self.enemy.exp_reward}点经验值和{self.enemy.gold_reward}枚金币!")
+            
+            # 添加掉落物品
+            for item_name in self.enemy.drop_items:
+                self.player.items.append(item_name)
+                item = self.config_manager.get_item(item_name)
+                self.add_to_log(f"获得了{item.get('name', item_name)}!")

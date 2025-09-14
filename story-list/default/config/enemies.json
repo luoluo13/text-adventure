@@ -1,0 +1,58 @@
+{
+  "goblin": {
+    "name": "哥布林",
+    "hp": 30,
+    "mp": 10,
+    "atk": 8,
+    "matk": 0,
+    "def": 3,
+    "mdef": 2,
+    "agi": 10,
+    "exp_reward": 15,
+    "gold_reward": 5,
+    "skills": ["slash", "pierce"],
+    "drop_items": ["health_potion", "copper_sword"]
+  },
+  "goblin_shaman": {
+    "name": "哥布林萨满",
+    "hp": 50,
+    "mp": 40,
+    "atk": 5,
+    "matk": 15,
+    "def": 5,
+    "mdef": 10,
+    "agi": 8,
+    "exp_reward": 40,
+    "gold_reward": 20,
+    "skills": ["fireball", "heal"],
+    "drop_items": ["magic_potion", "magic_staff"]
+  },
+  "orc": {
+    "name": "兽人战士",
+    "hp": 80,
+    "mp": 20,
+    "atk": 15,
+    "matk": 0,
+    "def": 10,
+    "mdef": 5,
+    "agi": 7,
+    "exp_reward": 60,
+    "gold_reward": 30,
+    "skills": ["heavy_slash", "shield_bash"],
+    "drop_items": ["iron_sword", "leather_armor"]
+  },
+  "dark_lord": {
+    "name": "黑暗领主",
+    "hp": 300,
+    "mp": 150,
+    "atk": 25,
+    "matk": 30,
+    "def": 20,
+    "mdef": 25,
+    "agi": 15,
+    "exp_reward": 500,
+    "gold_reward": 200,
+    "skills": ["dark_pulse", "life_drain", "meteor_strike"],
+    "drop_items": ["legendary_weapon", "dark_orb"]
+  }
+}

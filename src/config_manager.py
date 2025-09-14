@@ -19,6 +19,7 @@ class ConfigManager:
         self.enemies = {}
         self.skills = {}
         self.items = {}
+        self.shops = {}
         
     def load_all_configs(self):
         """
@@ -30,6 +31,7 @@ class ConfigManager:
         self.load_enemies()
         self.load_skills()
         self.load_items()
+        self.load_shops()
         
     def load_config_file(self, filename):
         """
@@ -87,6 +89,12 @@ class ConfigManager:
         加载物品配置
         """
         self.items = self.load_config_file("items.json")
+        
+    def load_shops(self):
+        """
+        加载商店配置
+        """
+        self.shops = self.load_config_file("shops.json")
         
     def get_class(self, class_name):
         """
@@ -180,3 +188,15 @@ class ConfigManager:
                 if quest.get("id") == quest_id:
                     return quest
         return {}
+        
+    def get_shop(self, shop_name):
+        """
+        获取商店配置
+        
+        Args:
+            shop_name (str): 商店名称
+            
+        Returns:
+            dict: 商店配置数据
+        """
+        return self.shops.get(shop_name, {})

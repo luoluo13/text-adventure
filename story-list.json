@@ -1,0 +1,8 @@
+[
+  {
+    "id": "default",
+    "name": "默认游戏",
+    "description": "经典的文字冒险RPG游戏",
+    "path": "config"
+  }
+]
